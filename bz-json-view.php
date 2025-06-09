@@ -1,25 +1,10 @@
 <?php
 /*
 Plugin Name: BZ JSON Viewer
-Description: Отображает JSON через шорткод [bz-json src='{"key": "value"}']
-Version: 1.0
+Description: Отображает JSON через шорткод [bz-json src='default.json'], файлы json должны находиться в папке json плагина
+Version: 1.1
 Author: BZ
 */
-
-const DEFAULT_JSON = '{
-  "name": "Mac",
-  "age": 25,
-  "rating": 4.5,
-  "isActive": true,
-  "isVerified": false,
-  "metadata": null,
-  "skills": ["PHP", "JavaScript", "WordPress"],
-  "contact": {
-    "email": "mac@example.com",
-    "phone": "+7 999 123-45-67"
-  }
-}';
-
 
 function render_null($null) {
     return '<span style="color:purple;">NULL</span>';
@@ -59,7 +44,13 @@ function render_json($val) {
 }
 
 function bz_json_view_shortcode($atts) {
-    return '<div>' . render_json(json_decode($atts['src'] ?? DEFAULT_JSON, true)) . '</div>';
+    return '<div>' . 
+        render_json(
+            json_decode(
+                file_get_contents(__DIR__ . '/json/' . ltrim(($atts['src'] ?? 'default.json'), '/')), true
+            )
+        ) . 
+    '</div>';
 }
 
 add_shortcode('bz-json', 'bz_json_view_shortcode');

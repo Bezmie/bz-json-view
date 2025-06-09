@@ -1,0 +1,13 @@
+{
+  "name": "Mac",
+  "age": 20,
+  "rating": 4.5,
+  "isActive": true,
+  "isVerified": false,
+  "metadata": null,
+  "skills": ["PHP", "JavaScript", "WordPress"],
+  "contact": {
+    "email": "mac@example.com",
+    "phone": "+7 999 123-45-67"
+  }
+}
