@@ -1,1 +1,2 @@
-Отображает JSON через шорткод [bz-json src='default.json'], файлы json должны находиться в папке json плагина
+ - Отображает JSON через шорткод [bz-json src='default.json']
+ - Файлы json должны находиться в папке json плагина
