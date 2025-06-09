@@ -1,2 +1,3 @@
+ - скачать в /wp-content/plugins/bz-json-view и включить плагин в админке
  - Отображает JSON через шорткод [bz-json src='default.json']
  - Файлы json должны находиться в папке json плагина
