@@ -1,46 +1,52 @@
 <?php
 /*
 Plugin Name: BZ JSON Viewer
-Description: Отображает JSON через шорткод [bz-json src='default.json'], файлы json должны находиться в папке json плагина
-Version: 1.1
+Description: Отображает JSON через шорткод [bz-json src='example.json'], файлы json должны находиться в папке json плагина
+Version: 1.2
 Author: BZ
 */
 
+function color_span($color, $content) {
+    return "<span style=\"color:$color;\">$content</span>";
+}
+
 function render_null($null) {
-    return '<span style="color:purple;">NULL</span>';
+    return color_span('purple', 'NULL');
 }
 
 function render_bool($bool) {
-    return '<span style="color:blue;">' . ['false', 'true'][$bool] . '</span>';
+    return color_span('blue', ['true', 'false'][$bool]);
 }
 
 function render_num($num) {
-    return '<span style="color:red;">' . $num . '</span>';
+    return color_span('red', $num);
 }
 
 function render_string($str) {
-    return '<span style="color:green;">' . $str . '</span>';
+    return color_span('green', $str);
 }
 
 function render_array($arr) {
-    return '<span style="color:gray;">ARRAY</span><ol start="0">' . 
-           implode('', array_map(fn($key, $val) => '<li>' . render_json($val) . '</li>', array_keys($arr), $arr)) . 
+    return color_span('gray', 'ARRAY') . '<ol start="0">' .
+           implode('', array_map(fn($val) => "<li>" . render_json($val) . "</li>", $arr)) .
            '</ol>';
 }
 
 function render_object($obj) {
-    return '<span style="color:gray;">OBJECT</span><ul>' . 
-           implode('', array_map(fn($key, $val) => '<li><span>' . $key . '</span>: ' . render_json($val) . '</li>', array_keys($obj), $obj)) . 
+    return color_span('gray', 'OBJECT') . '<ul>' .
+           implode('', array_map(fn($key, $val) => "<li><span>$key</span>: " . render_json($val) . "</li>", array_keys($obj), $obj)) .
            '</ul>';
 }
 
 function render_json($val) {
-    if (is_array($val) && array_is_list($val)) { return render_array($val); }
-    if (is_array($val)) { return render_object($val); }
-    if (is_null($val)) { return render_null($val); }
-    if (is_bool($val)) { return render_bool($val); }
-    if (is_numeric($val)) { return render_num($val); }
-    return render_string($val);
+    return match (true) {
+        is_array($val) && array_is_list($val)  => render_array($val),
+        is_array($val)                         => render_object($val),
+        is_null($val)                          => render_null(),
+        is_bool($val)                          => render_bool($val),
+        is_numeric($val)                       => render_num($val),
+        default                                => render_string($val),
+    };
 }
 
 function bz_json_view_shortcode($atts) {
